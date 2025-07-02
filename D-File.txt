@@ -1,0 +1,54 @@
+// This work is licensed under a Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) https://creativecommons.org/licenses/by-nc-sa/4.0/
+// © LuxAlgo
+ 
+//@version=5
+
+indicator("Support and Resistance Signals MTF [LuxAlgo]", 'LuxAlgo - Support Resistance Signals MTF', true, max_boxes_count = 500, max_lines_count = 500, max_labels_count = 500)
+
+//------------------------------------------------------------------------------
+// Settings
+//-----------------------------------------------------------------------------{
+
+srGR   = 'Support & Resistance Settings'
+srTT   = 'tip : in ranging markets higher timeframe resolution or higher detection length might help reduce the noise'
+srTF   = input.string('Chart', 'Detection Timeframe', options=['Chart', '15 Minutes', '1 Hour', '4 Hours', '1 Day', '1 Week'], group = srGR, tooltip = srTT)
+srLN   = input(15, 'Detection Length', group = srGR)
+
+srMR   = input.float(2, 'Support Resistance Margin', minval = .1, maxval = 10, step = .1, group = srGR)
+
+srSLC  = input(color.new(#089981, 53), '   - Support,     Lines', inline = 'srS', group = srGR)
+srSZC  = input(color.new(#089981, 83), 'Zones', inline = 'srS', group = srGR)
+srRLC  = input(color.new(#f23645, 53), '   - Resistance, Lines', inline = 'srR', group = srGR)
+srRZC  = input(color.new(#f23645, 83), 'Zones', inline = 'srR', group = srGR)
+
+srHST  = input.bool(true, 'Check Previous Historical S&R Zone', group = srGR)
+
+mnGR   = 'Manupulations' 
+mnSH   = input.bool(true, 'Manupulation Zones', group = mnGR)
+mnMR   = input.float(1.3, 'Manupulation Margin', minval = .1, maxval = 10, step = .1, group = mnGR)
+mnSZC  = input(color.new(#2962ff, 73), 'Manupulation Zones, Support', inline = 'LQ', group = mnGR)
+mnRZC  = input(color.new(#ff9800, 73), 'Resistance', inline = 'LQ', group = mnGR)
+
+sigGR  = 'Signals'
+srFBT  = 'Filters the breakouts that failed to continue beyond a level'
+srFBO  = input.bool(true, 'Avoid False Breakouts', group = sigGR, tooltip = srFBT)
+
+srBUC  = input(color.new(#089981, 33), 'Breakouts, Bullish', inline = 'srB', group = sigGR)
+srBDC  = input(color.new(#f23645, 33), 'Bearish', inline = 'srB', group = sigGR)
+srBS   = input.string('Tiny', "", options=['Auto', 'Tiny', 'Small', 'Normal', 'None'], inline = 'srB', group = sigGR)
+
+srTUC  = input(color.new(#2962ff, 33), 'Tests,        Bullish', inline = 'srT', group = sigGR)
+srTDC  = input(color.new(#e040fb, 33), 'Bearish', inline = 'srT', group = sigGR)
+srTS   = input.string('Tiny', "", options=['Auto', 'Tiny', 'Small', 'Normal', 'None'], inline = 'srT', group = sigGR)
+
+srRUC  = input(color.new(#089981, 33), 'Retests,     Bullish', inline = 'srR', group = sigGR)
+srRDC  = input(color.new(#f23645, 33), 'Bearish', inline = 'srR', group = sigGR)
+srRS   = input.string('Tiny', "", options=['Auto', 'Tiny', 'Small', 'Normal', 'None'], inline = 'srR', group = sigGR)
+
+srPUC  = input(color.new(#089981, 33), 'Rejections, Bullish', inline = 'srP', group = sigGR)
+srPDC  = input(color.new(#f23645, 33), 'Bearish', inline = 'srP', group = sigGR)
+srPS   = input.string('Tiny', "", options=['Auto', 'Tiny', 'Small', 'Normal', 'None'], inline = 'srP', group = sigGR)
+
+othGR  = 'Others'
+swSH   = input.string('None', "Swing Levels", options=['Auto', 'Small', 'Normal', 'Large', 'None'], inline = 'sw', group = othGR)
+swHC   = input(color.new(#f23645
